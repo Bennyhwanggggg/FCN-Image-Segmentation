@@ -5,3 +5,4 @@ import os
 from utils import *
 from model import *
 
+PATH = os.path.dirname(os.path.realpath(__file__))
