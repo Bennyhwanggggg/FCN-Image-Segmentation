@@ -24,3 +24,10 @@ def one_hot_init_v2(dp, num_class):
     out[np.arange(dp.size), dp.ravel().astype('uint8')] = 1
     out.shape = dp.shape + (num_class,)
     return out
+
+
+def one_hot_output(dp, num_class=3):
+    out = np.zeros((dp.size, num_class), dtype=np.uint8)
+    out[np.arange(dp.size), dp.ravel()] = 255
+    out.shape = dp.shape + (num_class,)
+    return out
