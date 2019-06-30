@@ -55,6 +55,11 @@ class ObjectRemover:
         self.test_batch_num = self.test_data.shape[0]//self.test_batch
 
     def create_training_data(self, num_class=2):
+        """
+
+        :param num_class: number of classes to use
+        :return: training and mask data
+        """
         training_data, training_mask_gt = create_data(self.training_directory,
                                                       self.training_mask_directory,
                                                       self.image_height,
@@ -63,12 +68,30 @@ class ObjectRemover:
         return training_data, training_mask_gt
 
     def create_test_data(self, num_class=2):
+        """
+
+        :param num_class: number of classes to use
+        :return: test and mask data
+        """
         test_data, test_mask_gt = create_data(self.test_data_directory,
                                               self.test_mask_directory,
                                               self.image_height,
                                               self.image_width,
                                               num_class)
         return test_data, test_mask_gt
+
+    def set_placeholder(self, shape=[None, None, None, 2], mask_name='mask_gt', training_name='training'):
+        """
+
+        :param shape: shape of place holder
+        :param mask_name: mask place holder name
+        :param training_name: training place holder name
+        :return: mask and training placeholders
+        """
+        mask_placeholder = tf.placeholder(tf.float32, shape=shape, name=mask_name)
+        training_placeholder = tf.placeholder(tf.bool, name=training_name)
+        return mask_placeholder, training_placeholder
+
 
 
 
