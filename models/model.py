@@ -127,4 +127,4 @@ def mask_generator(sess, training, reuse):
         network_10 = convolution(network_10, [64, 64, 2], padding='same', postfix_name='layer_6',
                                  activation=tf.nn.relu, reuse=reuse)
 
-        return network_10
+    return image_input, keep_prob, network_10
