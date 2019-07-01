@@ -124,8 +124,38 @@ class ObjectRemover:
         image_input, keep_probability, mask = mask_generator(sess=self.session, training=self.training_data, reuse=reuse)
         return image_input, keep_probability, mask
 
+    def mask_crop_bounding(self, mask, mask_gt, image, x=0, y=0):
+        """
 
+        :param mask: mask to crop to bounding box to
+        :param mask_gt: mask_gt to use
+        :param image: image to crop
+        :param x: x cord to crop
+        :param y: y cord to crop
+        :return: cropped image
+        """
+        mask = tf.image.crop_to_bounding_box(mask, x, y, self.original_height, self.original_width)
+        mask_gt_new = tf.image.crop_to_bounding_box(mask_gt, x, y, self.original_height, self.original_width)
 
+        image_in_crop = tf.image.crop_to_bounding_box(image, x, y, self.original_height, self.original_width)
+
+        return mask, mask_gt_new, image_in_crop
+
+    def mark_loss(self, mask, mask_gt, num_class=3):
+        """
+
+        :param mask: mask to use
+        :param mask_gt: mask_gt to use
+        :param num_class: num class to use
+        :return:
+        """
+        mask_logits = tf.reshape(mask, (-1, num_class))
+        mask_label = tf.reshape(mask_gt, (-1, num_class))
+        mask_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=mask_logits, labels=mask_label), name='mask_loss')
+        softmax = tf.nn.softmax(mask_logits)
+        predict = tf.reshape(tf.argmax(softmax, 1), (-1, self.original_height, self.original_width), name='final_pred')
+        mask_optimised = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(mask_loss)
+        return predict, mask_optimised
 
 
 
