@@ -54,6 +54,12 @@ class ObjectRemover:
         self.batch_num = self.training_data.shape[0]//self.batch_size
         self.test_batch_num = self.test_data.shape[0]//self.test_batch
 
+        """
+        Session
+        """
+        self.session_config = tf.ConfigProto()
+        self.session = None
+
     def create_training_data(self, num_class=2):
         """
 
@@ -91,6 +97,37 @@ class ObjectRemover:
         mask_placeholder = tf.placeholder(tf.float32, shape=shape, name=mask_name)
         training_placeholder = tf.placeholder(tf.bool, name=training_name)
         return mask_placeholder, training_placeholder
+
+    def create_session(self):
+        """Updates gpu option to allow growth
+
+        :return: tensorflow session object
+        """
+        self.session_config.gpu_options.allow_growth = True
+        session = tf.Session(config=self.session_config)
+        return session
+
+    def set_session(self, session):
+        """
+
+        :param session: tensorflow session object
+        :return: None
+        """
+        self.session = session
+
+    def generate_segmentation_mask(self, reuse=False):
+        """Generate segmentation mask
+
+        :param reuse: reuse boolean parameter
+        :return: image input result, keep probability, mask result
+        """
+        image_input, keep_probability, mask = mask_generator(sess=self.session, training=self.training_data, reuse=reuse)
+        return image_input, keep_probability, mask
+
+
+
+
+
 
 
 
