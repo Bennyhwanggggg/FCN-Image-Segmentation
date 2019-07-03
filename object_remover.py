@@ -1,15 +1,13 @@
 import os
-import tensorflow as tf
-import numpy as np
-from PIL import Image
-from models.model import *
-from utils.utils import *
 
 PATH = os.path.dirname(os.path.realpath(__file__))
 training_data_directory = 'Training_data/data_png'
 training_mask_data_directory = 'Training_data/mask_bin'
 testing_data_directory = 'Test_data/data_png'
 testing_mask_data_directory = 'Test_data/mask_bin'
+
+from models.model import *
+from utils.utils import *
 
 
 class ObjectRemover:
@@ -164,6 +162,19 @@ class ObjectRemover:
         correct_prediciton = tf.equal(tf.argmax(tf.nn.softmax(mask_logits), 1), tf.argmax(mask_label, 1))
         mask_acc = tf.reduce_mean(tf.cast(correct_prediciton, tf.float32), name='accuracy')
         return mask_acc
+
+    def run_session(self):
+        if self.session is None:
+            return
+        init = tf.global_variables_initializer()
+        self.session.run(init)
+
+    def onehot_output(self, prediction):
+        return one_hot_output(prediction)
+
+    def save(self, path):
+        saver = tf.train.Saver()
+        saver.save(sess=self.session, save_path=path)
 
 
 
