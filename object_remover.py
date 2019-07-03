@@ -49,7 +49,7 @@ class ObjectRemover:
         """
         Training and test parameter setup
         """
-        self.training_data, self.traning_mask_gt = self.create_training_data(num_class=2)
+        self.training_data, self.training_mask_gt = self.create_training_data(num_class=2)
         self.test_data, self.test_mask_gt = self.create_test_data(num_class=2)
         self.batch_num = self.training_data.shape[0]//self.batch_size
         self.test_batch_num = self.test_data.shape[0]//self.test_batch
@@ -157,7 +157,22 @@ class ObjectRemover:
         mask_optimised = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(mask_loss)
         return predict, mask_optimised
 
+    def train(self, save_path):
+        """Train FCN
 
+        :param save_path: path to save the result
+        :return: saves training result to save path
+        """
+        session = self.create_session()
+        init = tf.global_variables_initializer()
+        session.run(init)
+        predict, mask_optimised = self.mark_loss()
+        for epoch in range(self.training_epochs):
+            for batch in range(self.batch_num):
+                offset = (batch * self.batch_size) % (self.training_data.shape[0] - self.batch_size)
+                image_batch = self.training_data[offset:(offset + self.batch_size)]
+                mask_batch = self.training_mask_gt[offset:(offset + self.batch_size)]
+                _ = session.run([])
 
 
 
