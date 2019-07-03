@@ -151,28 +151,19 @@ class ObjectRemover:
         """
         mask_logits = tf.reshape(mask, (-1, num_class))
         mask_label = tf.reshape(mask_gt, (-1, num_class))
+
+        mask_acc = self.evaluation_metrics(mask_logits=mask_logits, mask_label=mask_label)
+
         mask_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=mask_logits, labels=mask_label), name='mask_loss')
         softmax = tf.nn.softmax(mask_logits)
         predict = tf.reshape(tf.argmax(softmax, 1), (-1, self.original_height, self.original_width), name='final_pred')
         mask_optimised = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(mask_loss)
-        return predict, mask_optimised
+        return predict, mask_optimised, mask_acc
 
-    def train(self, save_path):
-        """Train FCN
-
-        :param save_path: path to save the result
-        :return: saves training result to save path
-        """
-        session = self.create_session()
-        init = tf.global_variables_initializer()
-        session.run(init)
-        predict, mask_optimised = self.mark_loss()
-        for epoch in range(self.training_epochs):
-            for batch in range(self.batch_num):
-                offset = (batch * self.batch_size) % (self.training_data.shape[0] - self.batch_size)
-                image_batch = self.training_data[offset:(offset + self.batch_size)]
-                mask_batch = self.training_mask_gt[offset:(offset + self.batch_size)]
-                _ = session.run([])
+    def evaluation_metrics(self, mask_logits, mask_label):
+        correct_prediciton = tf.equal(tf.argmax(tf.nn.softmax(mask_logits), 1), tf.argmax(mask_label, 1))
+        mask_acc = tf.reduce_mean(tf.cast(correct_prediciton, tf.float32), name='accuracy')
+        return mask_acc
 
 
 
