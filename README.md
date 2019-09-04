@@ -12,3 +12,12 @@ pip install -r requirements.txt
 ### How to run
 1. Have the training data setup in a training data folder.  
 2. Run `main.py` after setup.  
+
+## What is FCN (Fully Convolutional Networks)?
+Read about FCN (here)[http://deeplearning.net/tutorial/fcn_2D_segm.html]
+
+## What is Semantic Segmentation?
+Read about Semantic Segmentation (here)[https://nanonets.com/blog/how-to-do-semantic-segmentation-using-deep-learning/]
+
+## Other useful links and github projects
+https://github.com/divamgupta/image-segmentation-keras
