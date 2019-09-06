@@ -21,3 +21,4 @@ Read about Semantic Segmentation [here](https://nanonets.com/blog/how-to-do-sema
 
 ## Other useful links and github projects
 https://github.com/divamgupta/image-segmentation-keras
+https://github.com/AKSHAYUBHAT/ImageSegmentation
