@@ -42,5 +42,5 @@ Instead, what you usually see is an architecture that uses downsampling of a fea
 Read more about Semantic Segmentation [here](https://nanonets.com/blog/how-to-do-semantic-segmentation-using-deep-learning/)
 
 ## Other useful links and github projects
-https://github.com/divamgupta/image-segmentation-keras
-https://github.com/AKSHAYUBHAT/ImageSegmentation
+- https://github.com/divamgupta/image-segmentation-keras
+- https://github.com/AKSHAYUBHAT/ImageSegmentation
